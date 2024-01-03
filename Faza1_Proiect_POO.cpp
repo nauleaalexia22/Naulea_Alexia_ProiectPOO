@@ -938,21 +938,6 @@ void main()
 
 	delete[]c_corp;
 
-	cout << endl << endl << "Matrice prima clasa(corp): " << endl << endl;
-	Corp** matrice = new Corp * [3];
-	for (int i = 0; i < 3; i++)
-	{
-		matrice[i] = new Corp[3];
-		for (int i = 0; i < 3; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				cout << matrice[i][j];
-			}
-		}
-	}
-
-	delete[]matrice;
 
 	cout << "Vector cu obiecte a doua clasa(organ):" << endl;
 
@@ -982,4 +967,20 @@ void main()
 	}
 
 	delete[]m_muschi;
+
+	cout << endl << endl << "Matrice clasa(muschi): " << endl << endl;
+	Muschi** matrice = new Muschi * [3];
+	for (int i = 0; i < 3; i++)
+	{
+		matrice[i] = new Muschi[3];
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				cout << matrice[i][j];
+			}
+		}
+	}
+	delete[]matrice;
+
 }
