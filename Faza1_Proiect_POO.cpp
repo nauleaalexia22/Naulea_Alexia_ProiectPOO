@@ -608,6 +608,187 @@ istream& operator>>(istream& tastatura, Muschi& m)
 	return tastatura;
 }
 
+//relatie has-a
+//A PATRA CLASA
+
+class Os : public Corp
+{
+private:
+	int nrOaseRupte;
+	int* nrRupturiOs;
+	float lungimeOs;
+
+public:
+
+	//getteri
+
+	int getNrOaseRupte()
+	{
+		return this->nrOaseRupte;
+	}
+
+	float getLungimeOs()
+	{
+		return this->lungimeOs;
+	}
+
+	int* getNrRupturiOs()
+	{
+		return this->nrRupturiOs;
+	}
+
+	//setteri
+
+	void setNrOaseRupte(int nrOaseRupteN)
+	{
+		this->nrOaseRupte = nrOaseRupteN;
+	}
+
+	void setLungimeOs(float lungimeOsN)
+	{
+		this->lungimeOs = lungimeOsN;
+	}
+
+	void setNrRupturiOs(int* nrRupturiOsN)
+	{
+		if (this->nrRupturiOs != NULL)
+			delete[]this->nrRupturiOs;
+		this->nrRupturiOs = new int[nrOaseRupte];
+		this->nrRupturiOs = nrRupturiOsN;
+	}
+
+	//functii prietene
+
+
+
+	//constructor fara parametri
+
+	Os() : Corp(4.1, 65)
+	{
+		this->nrOaseRupte = 2;
+		this->nrRupturiOs = new int[this->nrOaseRupte];
+		for (int i = 0; i < this->nrOaseRupte; i++)
+		{
+			this->nrRupturiOs[i] = 1;
+		}
+		this->lungimeOs = 15;
+	}
+
+	//constructor cu doi parametri
+
+	Os(int nrOaseRupteN, float lungimeOsN) : Corp(4.2, 84)
+	{
+		this->nrOaseRupte = nrOaseRupteN;
+		this->nrRupturiOs = new int[this->nrOaseRupte];
+		for (int i = 0; i < this->nrOaseRupte; i++)
+		{
+			this->nrRupturiOs[i] = 1;
+		}
+		this->lungimeOs = lungimeOsN;
+	}
+
+	//destructor
+
+	~Os()
+	{
+		if (this->nrRupturiOs != NULL)
+			delete[]this->nrRupturiOs;
+	}
+
+	//constructor de copiere
+
+	Os(const Os& o) :Corp(o)
+	{
+		this->nrOaseRupte = o.nrOaseRupte;
+		this->lungimeOs = o.lungimeOs;
+		this->nrRupturiOs = new int[this->nrOaseRupte];
+		for (int i = 0; i < this->nrOaseRupte; i++)
+		{
+			this->nrRupturiOs[i] = o.nrRupturiOs[i];
+		}
+	}
+
+	//operatorul =
+
+	Os operator=(const Os& o)
+	{
+		if (this != &o)
+			Corp::operator=(o);
+		this->nrOaseRupte = o.nrOaseRupte;
+		this->lungimeOs = o.lungimeOs;
+		if (this->nrRupturiOs != NULL)
+			delete[]this->nrRupturiOs;
+		if (this->nrOaseRupte > 0)
+		{
+			this->nrRupturiOs = new int[this->nrOaseRupte];
+			for (int i = 0; i < this->nrOaseRupte; i++)
+			{
+				this->nrRupturiOs[i] = o.nrRupturiOs[i];
+			}
+		}
+		else
+		{
+			this->nrRupturiOs = NULL;
+		}
+		return *this;
+	}
+
+	//ostream
+
+	friend ostream& operator<<(ostream& out, const Os& o)
+	{
+		out << "Lungimea osului este de " << o.lungimeOs<< " centimetri." << endl;
+		if (o.nrOaseRupte == 1)
+		{
+			out << "Persoana are un os rupt."<<endl;
+		}
+		else
+		{
+			out << "Persoana are " << o.nrOaseRupte << " oase rupte";
+			out << endl;
+		}
+		if (o.nrOaseRupte == 0)
+		{
+			out << "Persoana nu are oase rupte." << endl;
+		}
+		else
+		{
+			out << "Numarul de rupturi al fiecarui os: " << endl;
+			for (int i = 0; i < o.nrOaseRupte; i++)
+			{
+				out << o.nrRupturiOs[i] << " ";
+			}
+		}
+		return out;
+
+	}
+
+	//istream
+
+	friend istream& operator<<(istream& citire, Os& o)
+	{
+		o.nrRupturiOs = new int[o.nrOaseRupte];
+		cout << "Introduceti lungimea osului: ";
+		citire >> o.lungimeOs;
+		cout << "Introduceti numarul de oase rupte din corp: ";
+		citire >> o.nrOaseRupte;
+		if (o.nrOaseRupte > 0)
+		{
+			cout << "Introduceti numarul de rupturi al fiecarui os: ";
+			for (int i = 0; i < o.nrOaseRupte; i++)
+			{
+				cout << "osul[" << i + 1 << "] = ";
+				citire >> o.nrRupturiOs[i];
+				cout << endl;
+			}
+		}
+		return citire;
+	}
+
+
+
+};
+
 
 void main()
 {
@@ -982,5 +1163,10 @@ void main()
 		}
 	}
 	delete[]matrice;
+
+	//A PATRA CLASA
+
+	Os os1;
+	cout << os1;
 
 }
