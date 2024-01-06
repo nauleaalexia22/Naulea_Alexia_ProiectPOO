@@ -1,6 +1,7 @@
 //Domeniul ales: ANATOMIE
 
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -173,6 +174,29 @@ public:
 	bool operator==(const Corp& c) const
 	{
 		return this->inaltime == c.inaltime;
+	}
+
+	//SCRIERE FISIER TEXT
+
+	friend ofstream& operator<<(ofstream& fisier, const Corp& c)
+	{
+		fisier << c.inaltime << endl;
+		fisier << c.greutate << endl;
+		fisier << c.tipCorporal << endl;
+		return fisier;
+	}
+
+	friend ifstream& operator>>(ifstream& fisier, Corp& c)
+	{
+		fisier >> c.inaltime;
+		fisier >> c.greutate;
+		if (c.tipCorporal != NULL)
+			delete[]c.tipCorporal;
+		char tip[50] = {};
+		fisier >> tip;
+		c.tipCorporal = new char[strlen(tip) + 1];
+		strcpy_s(c.tipCorporal, strlen(tip) + 1, tip);
+		return fisier;
 	}
 };
 
@@ -737,6 +761,8 @@ public:
 
 	friend ostream& operator<<(ostream& out, const Os& o)
 	{
+		out << "-----------------------------------------------------------------------------------------------------" << endl;
+
 		out << "Lungimea osului este de " << o.lungimeOs<< " centimetri." << endl;
 		if (o.nrOaseRupte == 1)
 		{
@@ -758,7 +784,10 @@ public:
 			{
 				out << o.nrRupturiOs[i] << " ";
 			}
+			out << endl;
 		}
+		out << "-----------------------------------------------------------------------------------------------------" << endl;
+
 		return out;
 
 	}
@@ -785,6 +814,26 @@ public:
 		return citire;
 	}
 
+	//Operator + IMI DA EROARE LA MEMORIE!!!!!!!!!!
+
+	//Os operator+(const Os& o)
+	//{
+	//	Os aux = *this;
+	//	aux.lungimeOs = this->lungimeOs + o.lungimeOs;
+	//	aux.nrOaseRupte = this->nrOaseRupte + o.nrOaseRupte;
+	//	/*if (aux.nrRupturiOs != NULL)
+	//		delete[]aux.nrRupturiOs;*/
+	//	aux.nrRupturiOs = new int[aux.nrOaseRupte];
+	//	for (int i = 0; i < this->nrOaseRupte; i++)
+	//	{
+	//		aux.nrRupturiOs[i] = this->nrRupturiOs[i];
+	//	}
+	//	for (int i = this->nrOaseRupte; i < aux.nrOaseRupte; i++)
+	//	{
+	//		aux.nrRupturiOs[i] = o.nrRupturiOs[i - this->nrOaseRupte];
+	//	}
+	//	return aux;
+	//}
 
 
 };
@@ -1105,6 +1154,8 @@ void main()
 	cout << endl << endl << endl << endl;
 	cout << "Vectori de obiecte:" << endl << endl;
 
+	//Vector prima clasa
+
 	cout << "Vector cu obiecte prima clasa(corp):" << endl;
 
 	Corp* c_corp = new Corp[3];
@@ -1119,6 +1170,7 @@ void main()
 
 	delete[]c_corp;
 
+	//Vector a doua clasa
 
 	cout << "Vector cu obiecte a doua clasa(organ):" << endl;
 
@@ -1135,6 +1187,8 @@ void main()
 
 	delete[]o_organ;
 
+	//Vector a treia clasa
+
 	cout << "Vector cu obiecte a treia clasa(muschi):" << endl;
 
 	Muschi* m_muschi = new Muschi[3];
@@ -1149,24 +1203,55 @@ void main()
 
 	delete[]m_muschi;
 
+	//Matrice a treia clasa
+
 	cout << endl << endl << "Matrice clasa(muschi): " << endl << endl;
 	Muschi** matrice = new Muschi * [3];
 	for (int i = 0; i < 3; i++)
-	{
 		matrice[i] = new Muschi[3];
-		for (int i = 0; i < 3; i++)
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
 		{
-			for (int j = 0; j < 3; j++)
-			{
-				cout << matrice[i][j];
-			}
+			cout << matrice[i][j];
 		}
+	}
+	
+	for (int i = 0; i < 3; i++)
+	{
+		delete[] matrice[i];
 	}
 	delete[]matrice;
 
 	//A PATRA CLASA
 
 	Os os1;
+	cout << "Primul os :" << endl;
 	cout << os1;
+
+	cout << endl<<endl;
+	cout << "Al doilea os :" << endl;
+	Os os2(4, 5);
+	cout << os2;
+
+	os1.setLungimeOs(40);
+	cout << endl << endl;
+	cout << "Primul os modificat : " << endl;
+	cout << os1;
+
+	//Operator +
+
+	/*Os os3 = os1 + os2;
+	cout << os3;*/
+
+	//Fisier1 text
+
+	Corp p7;
+	ofstream c("Corp.txt", ios::app);
+	c << p7;
+	c.close();
+
+
 
 }
