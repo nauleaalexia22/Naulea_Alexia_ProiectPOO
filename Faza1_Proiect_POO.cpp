@@ -5,6 +5,15 @@
 
 using namespace std;
 
+//PRIMA CLASA ABSTRACTA
+
+//class CorpAbstract
+//{
+//public:
+//
+//	virtual void afisareDescriere() = 0;
+//};
+
 //PRIMA CLASA
 
 class Corp
@@ -58,7 +67,7 @@ public:
 
 	//destructor
 
-	~Corp()
+	 ~Corp()
 	{
 		delete[]this->tipCorporal;
 		this->tipCorporal = NULL;
@@ -185,6 +194,8 @@ public:
 		fisier << c.tipCorporal << endl;
 		return fisier;
 	}
+
+	//CITIRE FISIER TEXT
 
 	friend ifstream& operator>>(ifstream& fisier, Corp& c)
 	{
@@ -400,6 +411,31 @@ public:
 		return aux;
 	}
 
+	//SCRIERE FISIER TEXT
+
+	friend ofstream& operator<<(ofstream& fisier, const Organ& o)
+	{
+		fisier << o.greutate << endl;
+		fisier << o.esteSanatos << endl;
+		fisier << o.denumire << endl;
+		return fisier;
+	}
+
+	//CITIRE FISIER TEXT
+
+	friend ifstream& operator>>(ifstream& fisier, Organ& o)
+	{
+		fisier >> o.greutate;
+		fisier >> o.esteSanatos;
+		if (o.denumire != NULL)
+			delete[]o.denumire;
+		char den[50] = {};
+		fisier >> den;
+		o.denumire = new char[strlen(den) + 1];
+		strcpy_s(o.denumire, strlen(den) + 1, den);
+		return fisier;
+	}
+
 };
 
 int Organ::nrOrgan = 1;
@@ -599,6 +635,32 @@ public:
 	{
 		return this->masa >= m.masa;
 	}
+
+	//SCRIERE FISIER 
+
+	friend ofstream& operator<<(ofstream& fisier, const Muschi& m)
+	{
+		fisier << m.masa << endl;
+		fisier << m.lungime << endl;
+		fisier << m.nume << endl;
+		return fisier;
+	}
+
+	//CITIRE FISIER 
+
+	friend ifstream& operator>>(ifstream& fisier, Muschi &m)
+	{
+		fisier >> m.masa;
+		fisier >> m.lungime;
+		if (m.nume != NULL)
+			delete[]m.nume;
+		char num[50] = {};
+		fisier >> num;
+		m.nume = new char[strlen(num) + 1];
+		strcpy_s(m.nume, strlen(num) + 1, num);
+		return fisier;
+	}
+
 };
 
 int Muschi::nrMuschi = 500;
@@ -763,10 +825,10 @@ public:
 	{
 		out << "-----------------------------------------------------------------------------------------------------" << endl;
 
-		out << "Lungimea osului este de " << o.lungimeOs<< " centimetri." << endl;
+		out << "Lungimea osului este de " << o.lungimeOs << " centimetri." << endl;
 		if (o.nrOaseRupte == 1)
 		{
-			out << "Persoana are un os rupt."<<endl;
+			out << "Persoana are un os rupt." << endl;
 		}
 		else
 		{
@@ -835,8 +897,256 @@ public:
 	//	return aux;
 	//}
 
+	//SCRIERE FISIER 
 
+	friend ofstream& operator<<(ofstream& fisier, const Os& os)
+	{
+		fisier << os.nrOaseRupte << endl;
+		fisier << os.lungimeOs << endl;
+		fisier << os.nrRupturiOs << endl;
+		return fisier;
+	}
+
+	//CITIRE FISIER 
+
+	friend ifstream& operator>>(ifstream& fisier, Os& os)
+	{
+		int a;
+		fisier >> os.nrOaseRupte;
+		fisier >> os.lungimeOs;
+		fisier >> a;
+		if (os.nrRupturiOs != NULL)
+			delete[]os.nrRupturiOs;
+		if (os.nrOaseRupte != NULL)
+		{
+			delete[]os.nrRupturiOs;
+		}
+		if (os.nrOaseRupte > 0)
+		{
+			os.nrRupturiOs = new int[os.nrOaseRupte];
+			for (int i = 0; i < os.nrOaseRupte; i++)
+			{
+				fisier >> os.nrRupturiOs[i];
+			}
+		}
+		else
+		{
+			os.nrRupturiOs = NULL;
+		}
+		return fisier;
+	}
 };
+	//Relatie is-a
+	//A CINCEA CLASA 
+
+	class Organism
+	{
+	private: 
+
+		int nrOrganisme;
+		Corp* corp;
+
+	public:
+
+		//constructor fara parametri
+
+		Organism()
+		{
+			this->nrOrganisme= 3;
+			this->corp = new Corp[nrOrganisme];
+		}
+
+		//constructor cu un parametru
+
+		Organism(int organismeN): nrOrganisme(organismeN)
+		{
+			this->corp = new Corp[nrOrganisme];
+		}
+
+		//destructor
+
+		~Organism()
+		{
+			if (this->corp!=NULL)
+			{
+				delete[]this->corp;
+			}
+		}
+
+		//getteri
+
+		int getNrOrganisme()
+		{
+			return this->nrOrganisme;
+		}
+
+		Corp* getCorp()
+		{
+			return this->corp;
+		}
+
+		//setteri
+
+		void setNrOrganisme(int organismeN)
+		{
+			this->nrOrganisme = organismeN;
+		}
+
+		//Operator =
+
+		Organism& operator=(const Organism& org)
+		{
+			if (this != &org)
+			{
+				nrOrganisme = org.nrOrganisme;
+				if(this->corp!=NULL)
+					delete[]corp;
+				corp = new Corp[org.nrOrganisme];
+			}
+			return *this;
+		}
+
+		//Constructor de copiere
+
+		Organism(const Organism& org)
+		{
+			this->nrOrganisme = org.nrOrganisme;
+			this->corp = new Corp[org.nrOrganisme];
+			for (int i = 0; i < org.nrOrganisme; i++)
+			{
+				corp[i] = org.corp[i];
+			}
+		}
+
+		//Operatorul []
+
+		Corp& operator[](int index)
+		{
+			if (index >= 0 && index < nrOrganisme)
+			{
+				return this->corp[index];
+			}
+		}
+
+		void afiseazaOrganism()
+		{
+			cout << "Numarul de organisme este " << nrOrganisme << endl;
+			cout << "Detaliile despre fiecare organism/corp sunt: ";
+			for (int i = 0; i < nrOrganisme; i++)
+			{
+				cout << endl << corp[i];
+			}
+		}
+		
+	};
+
+	//A SASEA CLASA
+
+	class SistemMuscular
+	{
+	private: 
+
+		int nrMuschiVerificati;
+		Muschi* m;
+
+	public:
+
+		//constructor fara parametri
+
+		SistemMuscular()
+		{
+			this->nrMuschiVerificati = 5;
+			this->m = new Muschi[nrMuschiVerificati];
+		}
+
+		//constructor cu un parametru
+
+		SistemMuscular(int nrMuschiVerificatiN): nrMuschiVerificati(nrMuschiVerificatiN)
+		{
+			this->m = new Muschi[nrMuschiVerificatiN];
+		}
+
+		//destructor
+
+		~SistemMuscular()
+		{
+			if (this->m != NULL)
+			{
+				delete[]this->m;
+			}
+		}
+
+		//getteri
+
+		int getNrMuschiVerificati()
+		{
+			return this->nrMuschiVerificati;
+		}
+
+		Muschi* GetM()
+		{
+			return this->m;
+		}
+
+		//setteri
+
+		void setNrMuschiVerificati(int nrMuschiVerificatiN)
+		{
+			this->nrMuschiVerificati = nrMuschiVerificatiN;
+		}
+
+		//Operator =
+
+		SistemMuscular& operator=(const SistemMuscular& mus)
+		{
+			if (this != &mus)
+			{
+				nrMuschiVerificati = mus.nrMuschiVerificati;
+				if (this->m != NULL)
+					delete[]this->m;
+				m = new Muschi[mus.nrMuschiVerificati];
+			}
+			return *this;
+		}
+
+		//Constructor de copiere
+
+		SistemMuscular(const SistemMuscular& mus)
+		{
+			this->nrMuschiVerificati = mus.nrMuschiVerificati;
+			this->m = new Muschi[mus.nrMuschiVerificati];
+			for (int i = 0; i < this->nrMuschiVerificati; i++)
+			{
+				m[i] = mus.m[i];
+			}
+		}
+
+		//Operatorul[]
+
+		Muschi& operator[](int index)
+		{
+			if (index >= 0 && index < nrMuschiVerificati)
+			{
+				return this->m[index];
+			}
+		}
+
+		//afisare
+
+		void afisareSistemMuscular()
+		{
+			cout << "Numarul de muschi verificati din corp sunt: " << nrMuschiVerificati << endl;
+			cout << "Detaliile despre fiecare muschi sunt: ";
+			for (int i = 0; i < nrMuschiVerificati; i++)
+			{
+				cout << endl << m[i];
+			}
+		}
+	};
+
+	
+
+
 
 
 void main()
@@ -1239,6 +1549,7 @@ void main()
 	cout << endl << endl;
 	cout << "Primul os modificat : " << endl;
 	cout << os1;
+	cout << endl<<endl;
 
 	//Operator +
 
@@ -1247,11 +1558,85 @@ void main()
 
 	//Fisier1 text
 
+	cout << "Am creat primul fisier text."<<endl<<endl;
 	Corp p7;
 	ofstream c("Corp.txt", ios::app);
 	c << p7;
 	c.close();
 
+	ifstream c1("Corp.txt", ios::in);
+	c1 >> persoana1;
+	cout << persoana1;
+	c1.close();
+
+	//Fisier2 text
+
+	cout << "Am creat al doilea fisier text." << endl << endl;
+	ofstream o("Organ.txt", ios::app);
+	o << organ3;
+	o.close();
+
+	ifstream o1("Organ.txt", ios::in);
+	Organ organ7(7.1, 600);
+	o1 >> organ7;
+	cout << organ7;
+	o1.close();
+	cout << endl;
+
+	//Fisier1 binar
+
+	cout << "Am creat primul fisier binar." << endl << endl;
+	fstream m("Muschi.bin", ios::out | ios::binary);
+	m.write((char*)&muschi1, sizeof(Muschi));
+	m.close();
+
+	fstream m1("Muschi.bin", ios::in | ios::binary);
+	m1.read((char*)&muschi1, sizeof(Muschi));
+	m1.close();
+
+	//Fisier2 binar
+	
+	cout << "Am creat al doilea fisier binar." << endl << endl;
+	fstream o11("Os.bin", ios::out | ios::binary);
+	o11.write((char*)&os1, sizeof(Os));
+	o11.close();
+
+	fstream o12("Os.bin", ios::in | ios::binary);
+	o12.read((char*)&os1, sizeof(Os));
+	o12.close();
+
+	//A cincea clasa
+
+
+	//apelare + afisare primul constructror;
+
+	Organism org1;
+	org1.afiseazaOrganism();
+
+	//apelare + afisare al doilea constructor
+
+	Organism org2(5);
+	org2.afiseazaOrganism();
+
+
+
+	//A sasea clasa
+
+	//apelare + afisare primul constructor
+
+	SistemMuscular mus1;
+	mus1.afisareSistemMuscular();
+
+	//apelare + afisare al doilea constructor
+
+	SistemMuscular mus2(2);
+	mus2.afisareSistemMuscular();
+
+	//CLASA ABSTRACTA
+
+	//Corp corp;
+	//corp.afisareDescriere();
+	
 
 
 }
