@@ -65,9 +65,10 @@ public:
 
 	//al treilea constructor
 
-	Corp(float idNou, int inaltimeNoua, float greutateNoua, char* tipCorporalNou) : id(idNou), inaltime(inaltimeNoua), greutate(greutateNoua), tipCorporal(tipCorporalNou)
+	Corp(float idNou, int inaltimeNoua, float greutateNoua, char* tipCorporalNou) : id(idNou), inaltime(inaltimeNoua), greutate(greutateNoua)
 	{
-
+		this->tipCorporal = new char[strlen(tipCorporalNou) + 1];
+		strcpy_s(this->tipCorporal, strlen(tipCorporalNou) + 1, tipCorporalNou);
 	}
 
 	//constructor de copiere
@@ -149,8 +150,8 @@ public:
 	{
 		if (this->tipCorporal != NULL)
 			delete[]this->tipCorporal;
-		this->tipCorporal = new char[strlen("mezomorf") + 1];
-		this->tipCorporal = tipCorporalN;
+		this->tipCorporal = new char[strlen(tipCorporalN) + 1];
+		strcpy_s(tipCorporal, strlen(tipCorporalN) + 1, tipCorporalN);
 	}
 
 	//functiile prietene
@@ -248,7 +249,7 @@ ostream& operator<<(ostream& ecran, const Corp& c)
 
 istream& operator>>(istream& tastatura, Corp& c)
 {
-	c.tipCorporal = new char[50];
+	c.tipCorporal = new char[80];
 	cout << "Intoduceti greutatea persoanei:";
 	tastatura >> c.greutate;
 	cout << "Intoduceti inaltimea persoanei:";
@@ -300,9 +301,10 @@ public:
 
 	//al treilea constructor
 
-	Organ(float idNou, float greutateNoua, bool esteSanatosNou, char* denumireNoua) : id(idNou), greutate(greutateNoua), esteSanatos(esteSanatosNou), denumire(denumireNoua)
+	Organ(float idNou, float greutateNoua, bool esteSanatosNou, char* denumireNoua) : id(idNou), greutate(greutateNoua), esteSanatos(esteSanatosNou)
 	{
-
+		this->denumire = new char[strlen(denumireNoua) + 1];
+		strcpy_s(denumire, strlen(denumireNoua) + 1, denumireNoua);
 	}
 
 	//constructor de copiere
@@ -319,6 +321,7 @@ public:
 
 	~Organ()
 	{
+		if(this->denumire!=NULL)
 		delete[]this->denumire;
 	}
 
@@ -468,7 +471,7 @@ ostream& operator<<(ostream& ecran, const Organ& o)
 
 istream& operator>>(istream& tastatura, Organ& o)
 {
-	o.denumire = new char[40];
+	o.denumire = new char[80];
 	cout << "Intoduceti denumirea organului: ";
 	tastatura >> o.denumire;
 	cout << "Introduceti greutatea organului (in grame): ";
@@ -500,7 +503,7 @@ public:
 
 	void afisareDetaliim()
 	{
-		cout << "Masa muschiului este: " << getMasa() <<" si lungimea muschiului este: "<< getLungime() << endl;
+		cout << "Masa muschiului este: " << getMasa() <<" grame si lungimea muschiului este: "<< getLungime() << " cm."<<endl;
 	}
 	//primul constructor
 
@@ -543,6 +546,7 @@ public:
 
 	virtual ~Muschi()
 	{
+		if(this->nume!=NULL)
 		delete[]this->nume;
 	}
 
@@ -605,8 +609,8 @@ public:
 	{
 		if (this->nume != NULL)
 			delete[]this->nume;
-		this->nume = new char[25];
-		this->nume = numeN;
+		this->nume = new char[strlen(numeN)+1];
+		strcpy_s(nume, strlen(numeN) + 1, numeN);
 	}
 
 
@@ -703,12 +707,12 @@ ostream& operator<<(ostream& ecran, const Muschi& m)
 
 istream& operator>>(istream& tastatura, Muschi& m)
 {
-	m.nume = new char[25];
+	m.nume = new char[80];
 	cout << "Introduceti denumirea muschiului: ";
 	tastatura >> m.nume;
-	cout << "Introduceti greutatea muschiului: ";
+	cout << "Introduceti greutatea muschiului(grame): ";
 	tastatura >> m.masa;
-	cout << "Introduceti lungimea muschiului: ";
+	cout << "Introduceti lungimea muschiului(cm): ";
 	tastatura >> m.lungime;
 
 	return tastatura;
@@ -1023,7 +1027,7 @@ public:
 	MuschiIntins() : Muschi()
 	{
 		this->gradIntindere = 1;
-		this->detaliiIntindere = "intindere usoara";
+		this->detaliiIntindere = "usoara";
 		this->nrSaptamaniRecuperare = 1;
 
 	}
@@ -1035,19 +1039,19 @@ public:
 		this->gradIntindere = gradIntindereN;
 		if (this->gradIntindere == 1)
 		{
-			this->detaliiIntindere = "intindere usoara";
+			this->detaliiIntindere = "usoara";
 			this->nrSaptamaniRecuperare = 2;
 		}
 		else
 			if (this->gradIntindere == 2)
 			{
-				this->detaliiIntindere = "intindere moderata";
+				this->detaliiIntindere = "moderata";
 				this->nrSaptamaniRecuperare = 8;
 			}
 			else
 				if (this->gradIntindere == 3)
 				{
-					this->detaliiIntindere = "intindere ce a rupt muschiul pana la capat";
+					this->detaliiIntindere = "grava";
 					this->nrSaptamaniRecuperare = 14;
 				}
 	}
@@ -1055,7 +1059,7 @@ public:
 	MuschiIntins(int nrSaptamaniRecuperareN,int gradIntindereN) : Muschi()
 	{
 		this->gradIntindere = gradIntindereN;
-		this->detaliiIntindere = "intindere moderata";
+		this->detaliiIntindere = "moderata";
 		this->nrSaptamaniRecuperare = nrSaptamaniRecuperareN;
 	}
 
@@ -1131,7 +1135,7 @@ public:
 ostream& operator<<(ostream& ecran, const MuschiIntins& mi)
 {
 	ecran << "-----------------------------------------------------------------------------------------------------" << endl;
-	ecran << "Muschiul are o intindere de gradul " << mi.gradIntindere << ". Este o " << mi.detaliiIntindere <<"." << endl;
+	ecran << "Muschiul are o intindere de gradul " << mi.gradIntindere << ". Este o intindere " << mi.detaliiIntindere <<"." << endl;
 	if (mi.nrSaptamaniRecuperare == 1)
 		ecran << "Este necesara o saptamana de recuperare."<<endl;
 	else
@@ -1144,9 +1148,9 @@ istream& operator>>(istream& tastatura, MuschiIntins& mi)
 {
 	cout << "Introduceti gradul de intindere al muschiului (1,2 sau 3): ";
 	tastatura >> mi.gradIntindere;
-	cout << "Introduceti detalii despre intindere: (usoara, moderata, intindere care a rupt muschiul): ";
+	cout << "Introduceti detalii despre intindere: (usoara, moderata, grava): ";
 	tastatura >> mi.detaliiIntindere;
-	cout << "Introduceti numarul de saptamani de recuperare";
+	cout << "Introduceti numarul de saptamani de recuperare: ";
 	tastatura >> mi.nrSaptamaniRecuperare;
 	return tastatura;
 }
@@ -1238,9 +1242,9 @@ void main()
 		cout << "A doua persoana (persoana2): " << endl << endl;
 		cout << persoana2 << endl;
 		if (persoana2 > persoana1)
-			cout << "A doua persoana este mai inalta decat prima persoana." << endl;
+			cout << "A doua persoana este mai inalta decat prima persoana." << endl<<endl;
 		else
-			cout << "Prima persoana este mai inalta decat a doua persoana." << endl;
+			cout << "Prima persoana este mai inalta decat a doua persoana." << endl<<endl;
 	
 		//operator <
 	
@@ -1250,9 +1254,9 @@ void main()
 		cout << "A doua persoana (persoana3): " << endl << endl;
 		cout << persoana3 << endl;
 		if (persoana6 < persoana3)
-			cout << "Prima persoana este mai slaba decat a doua." << endl;
+			cout << "Prima persoana este mai slaba decat a doua." << endl<<endl;
 		else
-			cout << "A doua persoana este mai slaba decat prima." << endl;
+			cout << "A doua persoana este mai slaba decat prima." << endl<<endl;
 	
 		//operator ==
 	
@@ -1361,8 +1365,9 @@ void main()
 		cout << "Operator +: " << endl << endl;
 		cout << "Organul (organ5): " << endl << endl;
 		cout << organ5 << endl;
-		cout << "Dupa modificarea greutatii organului: ";
+		cout << "Dupa modificarea greutatii organului: (+10.3) ";
 		organ5 = 10.3 + organ5;
+		cout << endl;
 		cout << organ5<<endl;
 	
 	
@@ -1639,17 +1644,20 @@ void main()
 
 		//apelare + afisare primul constructror;
 
+		cout << "Apel primul constructor:" << endl << endl;
 	CorpSanatos cs1;
 	cout << cs1;
 
 	//apelare + afisare al doilea constructor
 
+	cout << "Apel al doilea constructor:" << endl << endl;
 	CorpSanatos cs2(98, 143);
 	cout << cs2;
 
 	//getteri si setteri
 
-	cout << "Getter: " << endl;
+	cout << endl;
+	cout << "Getter: " << endl << endl;
 	cout << "-----------------------------------------------------------------------------------------------------" << endl;
 	cout << "Persoana are tensiunea egala cu: " << cs2.getTensiune() << ". Pulsul este de: " << cs2.getPuls() << ", iar glicemia este egala cu: " << cs2.getGlicemie() << "." << endl;
 	cout << "-----------------------------------------------------------------------------------------------------" << endl;
@@ -1672,40 +1680,40 @@ void main()
 	//istream
 
 	CorpSanatos cs4;
-	cout << "Apel istream: " << endl << endl;
+	cout <<endl<< "Apel istream: " << endl << endl;
 	cin >> cs4;
 	cout << cs4;
 
 	//supraincarcare operator=
 
-	cout << "Operator =:" << endl << endl;
+	cout <<endl<< "Operator =:" << endl << endl;
 	cs1 = cs2;
 	cout << cs1;
 
 
 	//A SASEA CLASA
 
-	cout << "A sasea clasa" << endl << endl;
-
 	//apelare + afisare primul constructor
 
+	cout <<endl<< "Apel primul constructor:" << endl << endl;
 	MuschiIntins mi1;
 	cout << mi1;
 
 	//apelare + afisare al doilea constructor
 	
+	cout << "Apel al doilea constructor:" << endl << endl;
 	MuschiIntins mi2(8);
 	cout << mi2;
 
 	//getteri si setteri
 
-	cout << "Getter: " << endl;
+	cout <<endl<< "Getter: " << endl<<endl;
 	cout << "-----------------------------------------------------------------------------------------------------" << endl;
 	cout << "Gradul de intindere al muschiului este " << mi2.getGradIntindere() << ". Este o " << mi2.getDetaliiIntindere() << ". Numarul de saptamani de recuperare este " << mi2.getNrSaptamaniRecuperare() << endl;
 	cout << "-----------------------------------------------------------------------------------------------------" << endl;
 	cout << endl;
 
-	cout << "Setter:" << endl;
+	cout << "Setter:" << endl<<endl;
 	mi2.setGradIntindere(2);
 	cout << "-----------------------------------------------------------------------------------------------------" << endl;
 	cout << "Gradul de intindere al muschiului este " << mi2.getGradIntindere() << ". Este o " << mi2.getDetaliiIntindere() << ". Numarul de saptamani de recuperare este " << mi2.getNrSaptamaniRecuperare() << endl;
@@ -1722,13 +1730,13 @@ void main()
 	//istream
 
 	MuschiIntins mi4;
-	cout << "Apel istream: " << endl << endl;
+	cout <<endl<<"Apel istream: " << endl << endl;
 	cin >> mi4;
 	cout << mi4;
 
 	//supraincarcare operator=
 
-	cout << "Operator =: " << endl << endl;
+	cout << endl<<"Operator =: " << endl << endl;
 	mi3 = mi4;
 	cout << mi3;
 
